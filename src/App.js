@@ -21,31 +21,23 @@ import { AppBar, Toolbar, Button, IconButton, Typography, Menu, MenuItem, Dialog
 import SelectBucketDialog from './SelectBucketDialog';
 import HelpIcon from '@material-ui/icons/Help';
 import AboutDialog from './About';
+import SettingsDialog from './SettingsDialog';
+import ErrorDialog from './ErrorDialog';
 
-// Somewhere in your `index.ts`:
-
-let gcsFileBrowserRef = React.createRef();
-
-async function signIn() {
-  //const client_id = '604474120566-f1esonn8rpkcl8mckam6bk9gdsgsl88s.apps.googleusercontent.com';
-  const client_id = '38423913065-6qllh56uln0vc8r7qldubh34sbs32c7h.apps.googleusercontent.com'
-  await GCP_SEC.gapiLoad();
-  console.log("< gapiLoad")
-  //await GCP_SEC.gisIsReady(client_id);
-  await GCP_SEC.gisInit(client_id);
-  console.log("< gisInit");
-  // gcsFileBrowserRef.current.refresh(); // Once the enviroment is initialized, tell the GCSFileBrowser to refresh.
-} // End of signIn
 
 function App(props) {
-  const [bucketName, setBucketName] = useState('kolban-fb1')
+  const [bucketName, setBucketName] = useState(localStorage.getItem("bucket"))
   const [selectBucketDialogOpen, setSelectBucketDialogOpen] = useState(false);
   const [aboutDialogOpen, setAboutDialogOpen] = useState(false);
+  const [settingsDialogOpen, setSettingsDialogOpen] = useState(false);
+  const [errorDialogOpen, setErrorDialogOpen] = useState(false);
+  const [error, setError] = useState({"message": "no message"})
   const [selection, setSelection] = useState({ // The selected file to work with
     'bucket': '',
     'folder': '',
     'selection': new Set()
   })
+  const [settings, setSettings] = useState({clientId: localStorage.getItem("clientId")})
   const [tempSelection, setTempSelection] = useState(null)
   const [mainMenuAnchorEl, setMainMenuAnchorEl] = useState(null)
   const [fileBrowserOpen, setFileBrowserOpen] = useState(false)
@@ -58,6 +50,28 @@ function App(props) {
   const [noCreateFolder, setNoCreateFolder] = useState(false)
   const [noNavBar, setNoNavBar] = useState(false)
 
+  let gcsFileBrowserRef = React.createRef();
+
+  function showError(err) {
+    setError(err)
+    setErrorDialogOpen(true)
+  } // End of showError
+
+  async function signIn() {
+    setMainMenuAnchorEl(null) // Close the menu
+    await GCP_SEC.gapiLoad();
+    console.log("< gapiLoad")
+    //await GCP_SEC.gisIsReady(client_id);
+    try {
+      await GCP_SEC.gisInit(settings.clientId);
+    }
+    catch(err) {
+      showError(err)
+    }
+
+    console.log("< gisInit");
+    // gcsFileBrowserRef.current.refresh(); // Once the enviroment is initialized, tell the GCSFileBrowser to refresh.
+  } // End of signIn
 
   function changeSelection(data) {
     console.log('Selection changed')
@@ -71,7 +85,13 @@ function App(props) {
       return;
     }
     setTempSelection(data);
-  }
+  } // End of changeSelection
+
+  function changeSettings(settings) {
+    setSettings(settings)
+    localStorage.setItem("clientId", settings.clientId)
+    setSettingsDialogOpen(false);
+  } // End of changeSettings
 
   /**
    * Open the file chooser dialog.
@@ -81,6 +101,14 @@ function App(props) {
     setFileBrowserOpen(true)
     setTempSelection(null)
   } // End of onLoad
+
+  /**
+   * Open the settings dialog
+   */
+  function onSettings() {
+    setMainMenuAnchorEl(null) // Close the menu
+    setSettingsDialogOpen(true)
+  } // End of onSettings
 
   /**
    * Open the about dialog.
@@ -97,8 +125,6 @@ function App(props) {
     setMainMenuAnchorEl(null) // Close the menu
     setSelectBucketDialogOpen(true); // Open the select bucket dialog
   }
-
-  const selections = Array.from(selection.selection).map((item) => { return <span>{item};</span>; })
 
   return (
     <Box style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
@@ -161,8 +187,9 @@ function App(props) {
       <Box style={{ flexGrow: 1 }}>
         <FileEditor selection={selection} />
       </Box>
-      <SelectBucketDialog open={selectBucketDialogOpen} selected={(bucketName) => {
+      <SelectBucketDialog open={selectBucketDialogOpen} defaultBucketName={bucketName} selected={(bucketName) => {
         setBucketName(bucketName)
+        localStorage.setItem("bucket", bucketName)
         setSelectBucketDialogOpen(false)
       }}
         close={() => { setSelectBucketDialogOpen(false) }} />
@@ -193,6 +220,8 @@ function App(props) {
         </DialogActions>
       </Dialog>
       <AboutDialog open={aboutDialogOpen} close={() => {setAboutDialogOpen(false)}}/>
+      <SettingsDialog open={settingsDialogOpen} close={() => {setSettingsDialogOpen(false)}} settings={settings} selected={changeSettings}/>
+      <ErrorDialog open={errorDialogOpen} error={error} close={() => setErrorDialogOpen(false)} />
       <Menu
         anchorEl={mainMenuAnchorEl}
         open={Boolean(mainMenuAnchorEl)}
@@ -200,6 +229,7 @@ function App(props) {
                   <MenuItem onClick={signIn}>Sign In</MenuItem>
         <MenuItem onClick={onSelectBucket}>Select Bucket</MenuItem>
         <MenuItem onClick={onLoad}>Load</MenuItem>
+        <MenuItem onClick={onSettings}>Settings</MenuItem>
         <MenuItem onClick={onAbout}>About</MenuItem>
 
       </Menu>

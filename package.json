@@ -2,8 +2,9 @@
   "name": "gcs-file-browser",
   "version": "0.1.0",
   "private": false,
-  "browser": "./src/GCSFileBrowser.js",
+  "browser": "./src/App.js",
   "author": "Neil Kolban <kolban@google.com>",
+  "homepage": "https://kolban-google.github.io/gcs-editor",
   "dependencies": {
     "@material-ui/core": "^4.12.4",
     "@material-ui/icons": "^4.11.3",
@@ -19,6 +20,8 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -41,5 +44,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "gh-pages": "^4.0.0"
   }
 }

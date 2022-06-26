@@ -9,3 +9,5 @@ the whole file replacing what was previously present.
 
 This project is as-is and not a Google product or offering.  It is open source and there
 is no formal support.
+
+https://kolban-google.github.io/gcs-editor/

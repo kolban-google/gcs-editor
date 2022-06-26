@@ -21,46 +21,49 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import PropTypes from 'prop-types';
 
-
-class ErrorDialog extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-    }
-  }
-
+/**
+ * Display an error.
+ * <ErrorDialog open={} onClose={} error={} />
+ * open: A boolean indicating whether or not to show the dialog
+ * close: A callback invoked when the dialog is closed
+ * error: An error object containing:
+ * {
+ *   message: The error message
+ * }
+ * 
+ */
+function ErrorDialog(props) {
   /**
    * render
    * @returns 
    */
-  render() {
-    if (this.props.open) {
+
+  if (props.open) {
     console.log(`Error logging:`)
-    console.dir(this.props.error);
-    }
-    return (
-      <Dialog open={this.props.open}>
-        <DialogTitle>Error</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            An error has been detected
-            <br/>
-            {(!this.props.error && !this.props.error.message)?"No Message":this.props.error.message}
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button variant="contained" color="primary" onClick={this.props.onClose}>
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
-    );
+    console.dir(props.error);
   }
+  return (
+    <Dialog open={props.open}>
+      <DialogTitle>Error</DialogTitle>
+      <DialogContent>
+        <DialogContentText>
+          An error has been detected
+          <br />
+          {(!props.error && !props.error.message) ? "No Message" : props.error.message}
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button variant="contained" color="primary" onClick={props.close}>
+          Close
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
 }
 
 ErrorDialog.propTypes = {
   'open': PropTypes.bool.isRequired,
-  'onClose': PropTypes.func.isRequired,
+  'close': PropTypes.func.isRequired,
   'error': PropTypes.object.isRequired
 }
 

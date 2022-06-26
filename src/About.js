@@ -32,7 +32,7 @@ function AboutDialog(props) {
         <p>Display the contents of a GCS bucket and select a file for editing.
         </p>
         <p>
-            The source for this sample can be found at <a href="https://github.com/kolban-google/docai-dev" target="_blank" rel="noreferrer">github: kolban-google/docai-dev</a>
+            The source for this sample can be found at <a href="https://github.com/kolban-google/gcs-editor" target="_blank" rel="noreferrer">github: kolban-google/gcs-editor</a>
         </p>
         <p>This project is merely a sample and is provided <i>as-is</i> with no formal support.
             This is not a Google product or Google offering.

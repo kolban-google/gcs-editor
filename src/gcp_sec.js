@@ -39,7 +39,7 @@ function gapiInit() {
 
 function gisIsReady(client_id) {
   return new Promise((resolve, reject) => {
-    const tokenClient = google.accounts.oauth2.initTokenClient({
+    google.accounts.oauth2.initTokenClient({
       client_id,
       'scope': 'https://www.googleapis.com/auth/devstorage.full_control',
       'prompt': 'none',
@@ -48,7 +48,6 @@ function gisIsReady(client_id) {
         resolve()
       }
     });
-    debugger;
   })
 }
 /**
@@ -70,7 +69,7 @@ function gisInit(client_id) {
         resolve()
       }
     });
-    console.log("InitTokenClient called!")
+    //console.log("InitTokenClient called!")
     access();
   });
 } // End of gisInit
