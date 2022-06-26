@@ -1,0 +1,45 @@
+{
+  "name": "gcs-file-browser",
+  "version": "0.1.0",
+  "private": false,
+  "browser": "./src/GCSFileBrowser.js",
+  "author": "Neil Kolban <kolban@google.com>",
+  "dependencies": {
+    "@material-ui/core": "^4.12.4",
+    "@material-ui/icons": "^4.11.3",
+    "chonky": "^2.3.2",
+    "chonky-icon-fontawesome": "^2.3.2",
+    "file-saver": "^2.0.5",
+    "react": "^18.2.0",
+    "react-ace": "^10.1.0",
+    "react-dom": "^18.2.0",
+    "react-resize-detector": "^7.1.2",
+    "react-scripts": "5.0.1",
+    "stacktrace-js": "^2.0.2",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
