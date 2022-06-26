@@ -558,7 +558,7 @@ class GCSFileBrowser extends React.Component {
             </Button>
           </DialogActions>
         </Dialog>
-        <ErrorDialog open={this.state.openError} error={this.state.errorMessage} onClose={() => { this.setState({ 'openError': false }) }}></ErrorDialog>
+        <ErrorDialog open={this.state.openError} error={this.state.errorMessage} close={() => { this.setState({ 'openError': false }) }}></ErrorDialog>
         <input
           hidden
           type="file"
