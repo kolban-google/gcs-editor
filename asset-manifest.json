@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/gcs-editor/static/css/main.e6c13ad2.css",
+    "main.js": "/gcs-editor/static/js/main.42052c64.js",
+    "index.html": "/gcs-editor/index.html",
+    "main.e6c13ad2.css.map": "/gcs-editor/static/css/main.e6c13ad2.css.map",
+    "main.42052c64.js.map": "/gcs-editor/static/js/main.42052c64.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e6c13ad2.css",
+    "static/js/main.42052c64.js"
+  ]
+}
