@@ -43,9 +43,9 @@ function gisIsReady(client_id) {
       client_id,
       'scope': 'https://www.googleapis.com/auth/devstorage.full_control',
       'prompt': 'none',
-      'callback': () => {
-        console.log("InitTokenClient (or maybe access()) returned!");
-        resolve()
+      'callback': (tokenResponse) => {
+        //console.log("InitTokenClient (or maybe access()) returned!");
+        resolve(tokenResponse)
       }
     });
   })
@@ -64,9 +64,9 @@ function gisInit(client_id) {
       client_id,
       'scope': 'https://www.googleapis.com/auth/devstorage.full_control',
       'prompt': 'select_account',
-      'callback': () => {
-        console.log("InitTokenClient (or maybe access()) returned!");
-        resolve()
+      'callback': (tokenResponse) => {
+        // console.log("InitTokenClient (or maybe access()) returned!");
+        resolve(tokenResponse)
       }
     });
     //console.log("InitTokenClient called!")

@@ -26,18 +26,19 @@ import ErrorDialog from './ErrorDialog';
 
 
 function App(props) {
+  const [securityToken, setSecurityToken] = useState(null)
   const [bucketName, setBucketName] = useState(localStorage.getItem("bucket"))
   const [selectBucketDialogOpen, setSelectBucketDialogOpen] = useState(false);
   const [aboutDialogOpen, setAboutDialogOpen] = useState(false);
   const [settingsDialogOpen, setSettingsDialogOpen] = useState(false);
   const [errorDialogOpen, setErrorDialogOpen] = useState(false);
-  const [error, setError] = useState({"message": "no message"})
+  const [error, setError] = useState({ "message": "no message" })
   const [selection, setSelection] = useState({ // The selected file to work with
     'bucket': '',
     'folder': '',
     'selection': new Set()
   })
-  const [settings, setSettings] = useState({clientId: localStorage.getItem("clientId")})
+  const [settings, setSettings] = useState({ clientId: localStorage.getItem("clientId") })
   const [tempSelection, setTempSelection] = useState(null)
   const [mainMenuAnchorEl, setMainMenuAnchorEl] = useState(null)
   const [fileBrowserOpen, setFileBrowserOpen] = useState(false)
@@ -52,6 +53,13 @@ function App(props) {
 
   let gcsFileBrowserRef = React.createRef();
 
+  // Determine if we should enable/disable the "Load" button.  We should disable Load if:
+  // * No bucket name supplied
+  // * No client Id supplied
+  // * Not signed in
+  //
+  const allowLoad = bucketName !== null && bucketName.length > 0 && settings.clientId !== null && settings.clientId.length > 0 && securityToken !== null && securityToken.error === undefined
+
   function showError(err) {
     setError(err)
     setErrorDialogOpen(true)
@@ -60,22 +68,23 @@ function App(props) {
   async function signIn() {
     setMainMenuAnchorEl(null) // Close the menu
     await GCP_SEC.gapiLoad();
-    console.log("< gapiLoad")
+    //console.log("< gapiLoad")
     //await GCP_SEC.gisIsReady(client_id);
     try {
-      await GCP_SEC.gisInit(settings.clientId);
+      const tokenResponse = await GCP_SEC.gisInit(settings.clientId);
+      setSecurityToken(tokenResponse);
     }
-    catch(err) {
+    catch (err) {
       showError(err)
     }
 
-    console.log("< gisInit");
+    //console.log("< gisInit");
     // gcsFileBrowserRef.current.refresh(); // Once the enviroment is initialized, tell the GCSFileBrowser to refresh.
   } // End of signIn
 
   function changeSelection(data) {
-    console.log('Selection changed')
-    console.dir(data);
+    //console.log('Selection changed')
+    //console.dir(data);
     if (data.selection.size !== 1) {
       setTempSelection(null);
       return;
@@ -124,7 +133,7 @@ function App(props) {
   function onSelectBucket() {
     setMainMenuAnchorEl(null) // Close the menu
     setSelectBucketDialogOpen(true); // Open the select bucket dialog
-  }
+  } // End of onSelectBucket
 
   return (
     <Box style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
@@ -145,7 +154,7 @@ function App(props) {
           </Typography>
           <Button color="inherit" onClick={signIn}>Sign In</Button>
           <Button color="inherit" onClick={onSelectBucket}>Select Bucket</Button>
-          <Button color="inherit" onClick={onLoad}>Load</Button>
+          <Button color="inherit" disabled={!allowLoad} onClick={onLoad}>Load</Button>
           <IconButton color="inherit" onClick={onAbout}>
             <HelpIcon />
           </IconButton>
@@ -219,16 +228,16 @@ function App(props) {
           </Button>
         </DialogActions>
       </Dialog>
-      <AboutDialog open={aboutDialogOpen} close={() => {setAboutDialogOpen(false)}}/>
-      <SettingsDialog open={settingsDialogOpen} close={() => {setSettingsDialogOpen(false)}} settings={settings} selected={changeSettings}/>
+      <AboutDialog open={aboutDialogOpen} close={() => { setAboutDialogOpen(false) }} />
+      <SettingsDialog open={settingsDialogOpen} close={() => { setSettingsDialogOpen(false) }} settings={settings} selected={changeSettings} />
       <ErrorDialog open={errorDialogOpen} error={error} close={() => setErrorDialogOpen(false)} />
       <Menu
         anchorEl={mainMenuAnchorEl}
         open={Boolean(mainMenuAnchorEl)}
         onClose={() => { setMainMenuAnchorEl(null) }}>
-                  <MenuItem onClick={signIn}>Sign In</MenuItem>
+        <MenuItem onClick={signIn}>Sign In</MenuItem>
         <MenuItem onClick={onSelectBucket}>Select Bucket</MenuItem>
-        <MenuItem onClick={onLoad}>Load</MenuItem>
+        <MenuItem disabled={!allowLoad} onClick={onLoad}>Load</MenuItem>
         <MenuItem onClick={onSettings}>Settings</MenuItem>
         <MenuItem onClick={onAbout}>About</MenuItem>
 

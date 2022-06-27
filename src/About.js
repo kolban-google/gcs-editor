@@ -38,7 +38,7 @@ function AboutDialog(props) {
             This is not a Google product or Google offering.
         </p>
         <p>Neil Kolban (kolban@google.com)</p>
-        <p>Version: 2022-06-25</p>
+        <p>Version: 2022-06-26</p>
       </DialogContent>
       <DialogActions>
         <Button variant="contained" color="primary" onClick={props.close}>Close</Button>

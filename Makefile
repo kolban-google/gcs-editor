@@ -13,3 +13,18 @@ make-test-files:
 clean:
 	rm -rf node_modules
 	rm -rf package-lock.json
+	rm -rf build
+
+deploy:
+	-gsutil mb -l us-central1 gs://kolban-gcs-editor
+	#gsutil rm -r gs://kolban-gcs-editor
+	gsutil cp -r build/* gs://kolban-gcs-editor/gcs-editor
+
+buildx:
+	PUBLIC_URL="."; npm run build
+
+saveToGit:
+	git add .
+	git commit -m "$(shell date)"
+	git push
+	npm run deploy
